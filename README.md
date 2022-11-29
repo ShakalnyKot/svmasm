@@ -21,3 +21,6 @@ spush 0
 scall exit
 ```
 выведет '!' и выйдет с кодом выхода 0
+
+Так-же, есть файл [hello.S](hello.S), который выводит "Hello, World!":
+![Hello, World!](res/screenshot.png)
