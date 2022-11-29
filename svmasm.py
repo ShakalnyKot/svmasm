@@ -1,6 +1,6 @@
 import sys
 
-ASMDICT = {
+ASMTREE = {
 	"valid_opcodes": ["spush", "spop", "sclr", "scall", "sjz"],
 	"valid_scalls": ["exit", "putchar"],
 	"opcodes": {
@@ -19,20 +19,22 @@ DEBUG = False
 
 def mnemonic_to_opcode(arg: str) -> list:
 	mnop = arg.split(" ")[0]
-	if mnop in ASMDICT["valid_opcodes"]:
+	if mnop in ASMTREE["valid_opcodes"]:
 		result: list = []
-		result.append(ASMDICT["opcodes"][mnop])
+		result.append(ASMTREE["opcodes"][mnop])
 		if mnop in ["sclr"]:
 			if DEBUG: print(f"VERBOSE: {mnop} -> {result}")
 		else:
 			mnarg = arg.split(' ')[1]
 			flag_processed: bool = False
 			if mnop in ["scall"]:
-				if mnarg in ASMDICT["valid_scalls"]:
-					result.append(ASMDICT["scalls"][mnarg])
+				if mnarg in ASMTREE["valid_scalls"]:
+					result.append(ASMTREE["scalls"][mnarg])
 					flag_processed = True
 			if (mnarg.startswith("0x") or mnarg.endswith("h")) and not flag_processed == True:
 				result.append(int(mnarg.replace("0x", "").replace("h", ""), 16))
+			elif (mnarg.startswith("'") and mnarg.endswith("'")) and not flag_processed == True:
+				result.append(ord(mnarg.replace("'", "")))
 			elif not flag_processed == True:
 				result.append(int(mnarg))
 			if DEBUG: print(f"VERBOSE: {mnop} {arg.split(' ')[1]} -> {result}")
