@@ -1,14 +1,15 @@
 import sys
 
 ASMTREE = {
-	"valid_opcodes": ["spush", "spop", "sclr", "scall", "sjz"],
+	"valid_opcodes": ["spush", "spop", "sclr", "scall", "sjz", "prvs"],
 	"valid_scalls": ["exit", "putchar"],
 	"opcodes": {
 		"spush": 0x10,
 		"spop": 0x11,
 		"sclr": 0x12,
 		"scall": 0x1F,
-		"sjz": 0x20
+		"sjz": 0x20,
+		"prvs": 0x20
 	},
 	"scalls": {
 		"exit": 0x0F,
@@ -40,11 +41,11 @@ def mnemonic_to_opcode(op: str) -> list:
 					result.append(ASMTREE["scalls"][mnarg])
 					flag_processed = True
 			if not flag_processed == True:
-				if mnop in ["sjz"]:
-					result.append(marg_to_int(mnarg) & 0x000000FF)
-					result.append(marg_to_int(mnarg) & 0x0000FF00)
-					result.append(marg_to_int(mnarg) & 0x00FF0000)
+				if mnop in ["sjz", "prvs"]:
 					result.append(marg_to_int(mnarg) & 0xFF000000)
+					result.append(marg_to_int(mnarg) & 0x00FF0000)
+					result.append(marg_to_int(mnarg) & 0x0000FF00)
+					result.append(marg_to_int(mnarg) & 0x000000FF)
 				else:
 					result.append(marg_to_int(mnarg))
 			if DEBUG: print(f"VERBOSE: {mnop} {op.split(' ')[1]} -> {result}, size: {len(result)}")
